@@ -55,45 +55,35 @@ form.verify({
 });
 
 // 监听注册表单
-// const regForm = document.querySelector('.reg-form');
+const regForm = document.querySelector('.reg-form');
 
-// regForm.addEventListener('submit', (e) => {
-    // const username = document.getElementsByName('reg-username')[0].value;
-    // const password = document.getElementsByName('reg-password')[0].value;
-    // e.preventDefault()
-
-    // // 1 创建对象
-    // const xhr = new XMLHttpRequest();
-
-    // // 2 初始化
-    // xhr.open('POST', 'http://www.liulongbin.top:3007/api/reguser');
-
-    // // 3 发送
-    // xhr.send("username=" + document.getElementsByName('reg-username')[0].value + "&password=" + document.getElementsByName('reg-password')[0].value)
-
-    // // 
-    // xhr.onreadystatechange = function() {
-    //     if(xhr.status !== 0) {
-    //         return console.log(xhr.response)
-    //     }
-    //     console.log(xhr.response)
-    // }
-
-
-    
-
-// })
-
-$('.reg-form').on('submit', function(e) {
+regForm.addEventListener('submit', (e) => {
     e.preventDefault()
-    $.post('http://www.liulongbin.top:3007/api/reguser'), {
-        user: $('.reg-form [name=reg-username]').val(),
-        pass: $('.reg-form [name=reg-password]').val(),
-    }, function(res) {
-        if (res.status !== 0) {
-            return console.log('error')
+
+    // 1 创建对象
+    const xhr = new XMLHttpRequest();
+
+    // 2 初始化
+    xhr.open('POST', 'http://www.liulongbin.top:3007/api/reguser');
+
+    // 设置 Content-Tyep 属性（固定写法）
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded" );
+
+    // 4 发送
+    xhr.send("username=" + document.getElementsByName('reg-username')[0].value + "&password=" + document.getElementsByName('reg-password')[0].value)
+
+    // 
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState === 4) {
+            if(xhr.status >= 200 && xhr.status < 300) {
+                let data = JSON.parse(xhr.response)
+                if(data.status === 0) {
+                    layer.msg(data.message, {time: 1500, icon: 1});
+                } else {
+                    layer.msg(data.message, {time: 1500, icon: 2});
+                }
+            }
         }
-        console.log('success')
     }
 })
 
