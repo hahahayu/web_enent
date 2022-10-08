@@ -55,45 +55,62 @@ form.verify({
 });
 
 // 监听注册表单
-// const regForm = document.querySelector('.reg-form');
+const regForm = document.querySelector('.reg-form');
 
-// regForm.addEventListener('submit', (e) => {
-    // const username = document.getElementsByName('reg-username')[0].value;
-    // const password = document.getElementsByName('reg-password')[0].value;
-    // e.preventDefault()
+regForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-    // // 1 创建对象
-    // const xhr = new XMLHttpRequest();
+    // 1 创建对象
+    const xhr = new XMLHttpRequest();
 
-    // // 2 初始化
-    // xhr.open('POST', 'http://www.liulongbin.top:3007/api/reguser');
+    // 2 初始化
+    xhr.open('POST', 'http://www.liulongbin.top:3007/api/reguser');
 
-    // // 3 发送
-    // xhr.send("username=" + document.getElementsByName('reg-username')[0].value + "&password=" + document.getElementsByName('reg-password')[0].value)
+    // 设置 Content-Tyep 属性（固定写法）
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded" );
 
-    // // 
-    // xhr.onreadystatechange = function() {
-    //     if(xhr.status !== 0) {
-    //         return console.log(xhr.response)
-    //     }
-    //     console.log(xhr.response)
-    // }
+    // 4 发送
+    xhr.send("username=" + document.getElementsByName('reg-username')[0].value + "&password=" + document.getElementsByName('reg-password')[0].value)
 
-
-    
-
-// })
-
-$('.reg-form').on('submit', function(e) {
-    e.preventDefault()
-    $.post('http://www.liulongbin.top:3007/api/reguser'), {
-        user: $('.reg-form [name=reg-username]').val(),
-        pass: $('.reg-form [name=reg-password]').val(),
-    }, function(res) {
-        if (res.status !== 0) {
-            return console.log('error')
+    // 
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState === 4) {
+            if(xhr.status >= 200 && xhr.status < 300) {
+                let data = JSON.parse(xhr.response)
+                if(data.status === 0) {
+                    // 注册成功
+                    layer.msg(data.message, {time: 1500, icon: 1});
+                } else {
+                    layer.msg(data.message, {time: 1500, icon: 2});
+                }
+            }
         }
-        console.log('success')
     }
 })
 
+// 监听登录表单
+const loginForm = document.querySelector('.login-form')
+
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://www.liulongbin.top:3007/api/login');
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded" );
+    xhr.send("username=" + document.getElementsByName('username')[0].value + "&password=" + document.getElementsByName('password')[0].value)
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState === 4) {
+            if(xhr.status >= 200 && xhr.status < 300) {
+                let data = JSON.parse(xhr.response)
+                if(data.status === 0) {
+                    // 登录成功
+                    // 将登录成功后得到的 token 保存到 localStorage 中
+                    localStorage.setItem('token', data.token)
+                    location.href = './index.html'
+                } else {
+                    layer.msg(data.message, {time: 1500, icon: 2});
+                }
+            }
+        }
+    }
+})
