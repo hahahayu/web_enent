@@ -58,12 +58,7 @@ form.verify({
 const regForm = document.querySelector('.reg-form');
 
 regForm.addEventListener('submit', (e) => {
-<<<<<<< HEAD
-    e.preventDefault()
-=======
     e.preventDefault();
->>>>>>> login
-
     // 1 创建对象
     const xhr = new XMLHttpRequest();
 
@@ -82,10 +77,7 @@ regForm.addEventListener('submit', (e) => {
             if(xhr.status >= 200 && xhr.status < 300) {
                 let data = JSON.parse(xhr.response)
                 if(data.status === 0) {
-<<<<<<< HEAD
-=======
                     // 注册成功
->>>>>>> login
                     layer.msg(data.message, {time: 1500, icon: 1});
                 } else {
                     layer.msg(data.message, {time: 1500, icon: 2});
